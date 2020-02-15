@@ -1,3 +1,5 @@
+package com.company.steam_api;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Stats {
@@ -18,7 +20,7 @@ public class Stats {
 
     @Override
     public String toString() {
-        return "Stats{" +
+        return "com.company.steam_api.Stats{" +
                 "name='" + name + '\'' +
                 ", value=" + value +
                 '}';

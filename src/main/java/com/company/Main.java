@@ -1,3 +1,7 @@
+package com.company;
+
+import com.company.bot.Bot;
+import com.company.steam_api.SteamApiWorker;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;

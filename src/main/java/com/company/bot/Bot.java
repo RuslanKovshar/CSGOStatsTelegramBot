@@ -1,3 +1,7 @@
+package com.company.bot;
+
+import com.company.steam_api.SteamApiWorker;
+import com.company.steam_api.UserStats;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -38,7 +42,7 @@ public class Bot extends TelegramLongPollingBot {
 
     private String getResultMessage(String messageText)  {
         if (apiWorker == null) {
-            throw new IllegalStateException("SteamApiWorker cannot be null!");
+            throw new IllegalStateException("com.company.steam_api.SteamApiWorker cannot be null!");
         }
 
         try {
