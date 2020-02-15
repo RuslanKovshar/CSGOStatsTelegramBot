@@ -49,7 +49,7 @@ public class Bot extends TelegramLongPollingBot {
             String stats = apiWorker.getStats(messageText);
             UserStats userStats = apiWorker.mapStats(stats);
             Map<String, Long> userStatsMap = apiWorker.convertToMap(userStats);
-            return apiWorker.setMessage(userStatsMap);
+            return apiWorker.createResultMessage(userStatsMap);
         } catch (IOException e) {
             e.printStackTrace();
             return "Error! Check your steamID";

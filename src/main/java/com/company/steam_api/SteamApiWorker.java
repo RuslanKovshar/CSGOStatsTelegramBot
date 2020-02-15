@@ -1,17 +1,18 @@
 package com.company.steam_api;
 
+import com.company.steam_api.editor.AbstractEditor;
+import com.company.steam_api.editor.HSPercentageEditor;
+import com.company.steam_api.editor.KDRationEditor;
+import com.company.steam_api.editor.WeaponsEditor;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,14 +20,8 @@ public class SteamApiWorker {
 
     private static final String API_URL = "http://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/" +
             "?appid=730&key=%s&steamid=%s";
-    private static final String KEY = "63A7093AE2FF9F68F062E9707E5470F7";
+    private static final String KEY = System.getenv("TELEGRAM_KEY");
 
-
-    /**
-     * @param steamId steam id
-     * @return user stats in json
-     * @throws IOException if exceptions occurs
-     */
     public String getStats(String steamId) throws IOException {
         String requestURL = String.format(API_URL, KEY, steamId);
 
@@ -59,34 +54,10 @@ public class SteamApiWorker {
         return stats;
     }
 
-    public String setMessage(Map<String, Long> stats) {
-        Long totalKills = stats.get("total_kills");
-        Long totalDeaths = stats.get("total_deaths");
-        Long killsHeadshot = stats.remove("total_kills_headshot");
-
-        double ratio = roundValue(totalKills.doubleValue() / totalDeaths);
-        double headShotPercentage = roundValue(killsHeadshot * 100. / totalKills);
-
+    public String createResultMessage(Map<String, Long> stats) {
         StringBuilder builder = new StringBuilder();
-        builder.append("K/D ratio: ").append(ratio).append("\n");
-        builder.append("Headshot percentage: ").append(headShotPercentage).append("\n\n");
-
-        builder.append("Total kills with:").append("\n");
-        stats.entrySet().stream()
-                .filter(entry -> entry.getKey().contains("total_kills_"))
-                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-                .forEach(entry -> builder.append(entry.getKey().replace("total_kills_", "").toUpperCase())
-                        .append(":\t\t")
-                        .append(entry.getValue())
-                        .append("\n"));
-
+        AbstractEditor editor = new KDRationEditor(new HSPercentageEditor(new WeaponsEditor()));
+        editor.edit(stats,builder);
         return builder.toString();
     }
-
-    private double roundValue(double value) {
-        return new BigDecimal(value)
-                .setScale(2, RoundingMode.UP)
-                .doubleValue();
-    }
-
 }
