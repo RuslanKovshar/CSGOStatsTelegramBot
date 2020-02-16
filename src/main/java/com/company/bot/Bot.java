@@ -13,8 +13,8 @@ import java.util.Map;
 
 public class Bot extends TelegramLongPollingBot {
 
-    private static final String BOT_USERNAME = "CSGOUserStatsBot";
-    private static final String BOT_TOKEN = "1079061401:AAEjKQmjMedMLXZq3iPWPoF6Q1nCSwVmWu8";
+    private static final String BOT_USERNAME = System.getenv("TELEGRAM_BOT_USERNAME");
+    private static final String BOT_TOKEN = System.getenv("TELEGRAM_BOT_KEY");
 
     private SteamApiWorker apiWorker;
 
@@ -42,7 +42,7 @@ public class Bot extends TelegramLongPollingBot {
 
     private String getResultMessage(String messageText)  {
         if (apiWorker == null) {
-            throw new IllegalStateException("com.company.steam_api.SteamApiWorker cannot be null!");
+            throw new IllegalStateException("SteamApiWorker cannot be null!");
         }
 
         try {
@@ -52,7 +52,11 @@ public class Bot extends TelegramLongPollingBot {
             return apiWorker.createResultMessage(userStatsMap);
         } catch (IOException e) {
             e.printStackTrace();
-            return "Error! Check your steamID";
+            return "Error! Check your steamID" +
+                    "\nTo begin send me your steam64ID!\n\n" +
+                    "To view your stats you must set your game data to public by going to your\n" +
+                    "Steam Profile --> Edit Profile --> Privacy Settings --> " +
+                    "Set: 'My profile: Public' and 'Game details: public'";
         }
     }
 

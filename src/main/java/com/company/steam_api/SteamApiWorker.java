@@ -20,7 +20,7 @@ public class SteamApiWorker {
 
     private static final String API_URL = "http://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/" +
             "?appid=730&key=%s&steamid=%s";
-    private static final String KEY = System.getenv("TELEGRAM_KEY");
+    private static final String KEY = System.getenv("STEAM_API_KEY");
 
     public String getStats(String steamId) throws IOException {
         String requestURL = String.format(API_URL, KEY, steamId);
